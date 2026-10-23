@@ -1,10 +1,10 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-23T19:00:00+08:00",
+  "updatedAt": "2026-10-23T11:44:52.142Z",
   "company": "開楠營造有限公司",
   "systemName": "工地環境安全即時監控系統",
   "settings": {
-    "cwaApiKey": "",
+    "cwaApiKey": "CWA-6E6F3529-E035-4B7D-A14B-727F210C7BC7",
     "refreshMinutes": 5,
     "github": {
       "owner": "ozlm0806",
@@ -32,21 +32,51 @@
     {
       "user": "admin",
       "name": "系統管理者",
-      "salt": "58c52758463082fb",
-      "hash": "6e76bd7fa4b42afdf86591feccef54659844be0b51655e8f83f8785377bb0967",
-      "mustChange": true
+      "salt": "82fdc1f2ed08e648",
+      "hash": "c2801f99436dcc7b48e3b6dd6e32667803939ac31d213812ff9c855908e12254",
+      "mustChange": false
     }
   ],
   "sites": [
     {
-      "id": "site-demo",
-      "name": "範例工地（請至管理後台修改）",
+      "id": "site-mvkwftn6",
+      "name": "東海國中活動中心",
       "code": "",
-      "county": "臺北市",
-      "address": "臺北市信義區",
-      "lat": 25.0330,
-      "lon": 121.5654,
-      "manager": "",
+      "county": "臺東縣",
+      "address": "",
+      "lat": 22.745529,
+      "lon": 121.149381,
+      "manager": "郭俊佑",
+      "phone": "089-359575",
+      "startDate": "2025-10-01",
+      "endDate": "2027-05-04",
+      "note": "",
+      "enabled": true
+    },
+    {
+      "id": "site-mvkwibkg",
+      "name": "豐里派出所拆除重建工程",
+      "code": "",
+      "county": "臺東縣",
+      "address": "",
+      "lat": 22.736191,
+      "lon": 121.121419,
+      "manager": "陳信全",
+      "phone": "0918111089",
+      "startDate": "2025-09-25",
+      "endDate": "2027-02-03",
+      "note": "",
+      "enabled": true
+    },
+    {
+      "id": "site-mvkwjxpv",
+      "name": "新建太麻里社會福利館",
+      "code": "",
+      "county": "臺東縣",
+      "address": "",
+      "lat": 22.610092,
+      "lon": 121.004603,
+      "manager": "鄭子文",
       "phone": "",
       "startDate": "",
       "endDate": "",
