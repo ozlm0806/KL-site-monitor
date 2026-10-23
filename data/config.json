@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-23T11:47:36.076Z",
+  "updatedAt": "2026-10-23T11:59:22.218Z",
   "company": "開楠營造有限公司",
   "systemName": "工地環境安全即時監控系統",
   "settings": {
@@ -40,7 +40,7 @@
   "sites": [
     {
       "id": "site-mvkwftn6",
-      "name": "東海國中活動中心",
+      "name": "東海國中-興建多功能活動中心統包工程",
       "code": "",
       "county": "臺東縣",
       "address": "",
@@ -55,7 +55,7 @@
     },
     {
       "id": "site-mvkwibkg",
-      "name": "豐里派出所拆除重建工程",
+      "name": "臺東分局豐里派出所拆除重建工程",
       "code": "",
       "county": "臺東縣",
       "address": "",
@@ -70,7 +70,7 @@
     },
     {
       "id": "site-mvkwjxpv",
-      "name": "新建太麻里社會福利館",
+      "name": "新建臺東縣太麻里綜合社會福利館工程",
       "code": "",
       "county": "臺東縣",
       "address": "",
