@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "updatedAt": "2026-10-23T19:00:00+08:00",
+  "company": "開楠營造有限公司",
+  "systemName": "工地環境安全即時監控系統",
+  "settings": {
+    "cwaApiKey": "",
+    "refreshMinutes": 5,
+    "github": {
+      "owner": "ozlm0806",
+      "repo": "KL-site-monitor",
+      "branch": "main",
+      "path": "data/config.json"
+    },
+    "thresholds": {
+      "windAvgWarn": 7,
+      "windAvgStop": 10,
+      "gustWarn": 10,
+      "gustStop": 15,
+      "rainNowWarn": 0.5,
+      "rainNowStop": 10,
+      "rain12hWarn": 10,
+      "rain12hStop": 50,
+      "dayHeavy": 80,
+      "dayTorrential": 200,
+      "paintRhWarn": 80,
+      "paintRhStop": 85,
+      "quakeStopIntensity": 4
+    }
+  },
+  "admins": [
+    {
+      "user": "admin",
+      "name": "系統管理者",
+      "salt": "58c52758463082fb",
+      "hash": "6e76bd7fa4b42afdf86591feccef54659844be0b51655e8f83f8785377bb0967",
+      "mustChange": true
+    }
+  ],
+  "sites": [
+    {
+      "id": "site-demo",
+      "name": "範例工地（請至管理後台修改）",
+      "code": "",
+      "county": "臺北市",
+      "address": "臺北市信義區",
+      "lat": 25.0330,
+      "lon": 121.5654,
+      "manager": "",
+      "phone": "",
+      "startDate": "",
+      "endDate": "",
+      "note": "",
+      "enabled": true
+    }
+  ]
+}
