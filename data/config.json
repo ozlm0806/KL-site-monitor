@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-23T11:45:10.102Z",
+  "updatedAt": "2026-10-23T11:47:36.076Z",
   "company": "開楠營造有限公司",
   "systemName": "工地環境安全即時監控系統",
   "settings": {
@@ -32,8 +32,8 @@
     {
       "user": "admin",
       "name": "系統管理者",
-      "salt": "82fdc1f2ed08e648",
-      "hash": "c2801f99436dcc7b48e3b6dd6e32667803939ac31d213812ff9c855908e12254",
+      "salt": "e75e0d5ca6415f8b",
+      "hash": "a3ac6a1d15eb05894c1a679399156f826078f652b1ab3023a6248b6ec49bc903",
       "mustChange": false
     }
   ],
