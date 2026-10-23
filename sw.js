@@ -19,7 +19,7 @@ self.addEventListener('fetch', e => {
   if (url.pathname.endsWith('/data/config.json')) return; // 設定檔永遠取最新
   // 網頁外殼：網路優先，離線時改用快取
   e.respondWith(
-    fetch(e.request).then(r => {
+    fetch(e.request, e.request.mode === 'navigate' ? undefined : { cache: 'no-cache' }).then(r => {
       if (r.ok) { const cp = r.clone(); caches.open(CACHE).then(c => c.put(e.request, cp)); }
       return r;
     }).catch(() => caches.match(e.request, { ignoreSearch: true }))
