@@ -88,12 +88,17 @@ const DataSrc = (() => {
     list.filter(filter).map(s => ({ ...s, dist: KL.distKm(lat, lon, s.lat, s.lon) })).sort((a, b) => a.dist - b.dist);
 
   /* ---------- 地震 ---------- */
+  // 氣象署時間可能是 "2026-10-13T17:30:10+08:00" 或 "2026-10-13 17:30:10"
+  const parseTwTime = s => {
+    const t = String(s || '').trim().replace(' ', 'T');
+    return new Date(/[+-]\d\d:?\d\d$|Z$/.test(t) ? t : t + '+08:00');
+  };
   async function cwaQuakes(key) {
     const d = await getJSON(cwaUrl('E-A0015-001', key, '&limit=30'), 5 * 60e3);
     return (d.records?.Earthquake || []).map(q => {
       const i = q.EarthquakeInfo || {};
       return {
-        no: q.EarthquakeNo, report: q.ReportContent, time: new Date(String(i.OriginTime).replace(' ', 'T') + '+08:00'),
+        no: q.EarthquakeNo, report: q.ReportContent, time: parseTwTime(i.OriginTime),
         mag: val(i.EarthquakeMagnitude?.MagnitudeValue), depth: val(i.FocalDepth),
         lat: val(i.Epicenter?.EpicenterLatitude), lon: val(i.Epicenter?.EpicenterLongitude), location: i.Epicenter?.Location || '',
         areas: q.Intensity?.ShakingArea || []
@@ -145,37 +150,50 @@ const DataSrc = (() => {
   }
 
   /* ---------- 颱風 ---------- */
-  const parseCoord = s => {
-    if (!s) return null;
-    const [a, b] = String(s).split(',').map(Number);
+  // 氣象署欄位大小寫曾經改版（tropicalCyclone / TropicalCyclone），一律轉小寫再讀取
+  const lowerKeys = o => Array.isArray(o) ? o.map(lowerKeys)
+    : (o && typeof o === 'object') ? Object.fromEntries(Object.entries(o).map(([k, v]) => [k.toLowerCase(), lowerKeys(v)])) : o;
+  const arr = x => x == null ? [] : Array.isArray(x) ? x : [x];
+  const fixCoord = f => {
+    if (f.coordinatelatitude != null) return { lat: +f.coordinatelatitude, lon: +f.coordinatelongitude };
+    if (!f.coordinate) return null;
+    const [a, b] = String(f.coordinate).split(',').map(Number);
     if (!isFinite(a) || !isFinite(b)) return null;
     return a > 90 ? { lon: a, lat: b } : { lat: a, lon: b };
   };
+  const r15 = f => val((f.circle15ms || f.circleof15ms)?.radius);
+  const r25 = f => val((f.circle25ms || f.circleof25ms)?.radius);
+  const DIR_EN = { N: '北', NNE: '北北東', NE: '東北', ENE: '東北東', E: '東', ESE: '東南東', SE: '東南', SSE: '南南東', S: '南', SSW: '南南西', SW: '西南', WSW: '西南西', W: '西', WNW: '西北西', NW: '西北', NNW: '北北西' };
   const tyClass = ms => ms == null ? '' : ms >= 51 ? '強烈颱風' : ms >= 32.7 ? '中度颱風' : ms >= 17.2 ? '輕度颱風' : '熱帶性低氣壓';
   async function cwaTyphoons(key, lat, lon) {
-    const d = await getJSON(cwaUrl('W-C0034-005', key), 10 * 60e3);
-    let list = d.records?.tropicalCyclones?.tropicalCyclone || [];
-    if (!Array.isArray(list)) list = [list];
+    const d = lowerKeys(await getJSON(cwaUrl('W-C0034-005', key), 10 * 60e3));
+    const list = arr(d.records?.tropicalcyclones?.tropicalcyclone);
     return list.map(t => {
-      const fixes = t.analysisData?.fix || [];
+      const fixes = arr(t.analysisdata?.fix);
       const cur = fixes[fixes.length - 1] || {};
-      const c = parseCoord(cur.coordinate);
-      const r7 = val(cur.circleOf15Ms?.radius), r10 = val(cur.circleOf25Ms?.radius);
+      const c = fixCoord(cur);
+      const r7 = r15(cur), r10 = r25(cur);
       const dist = c ? KL.distKm(lat, lon, c.lat, c.lon) : null;
       let closest = null;
-      for (const f of (t.forecastData?.fix || [])) {
-        const fc = parseCoord(f.coordinate); if (!fc) continue;
+      for (const f of arr(t.forecastdata?.fix)) {
+        const fc = fixCoord(f); if (!fc) continue;
         const dd = KL.distKm(lat, lon, fc.lat, fc.lon);
-        const fr = val(f.circleOf15Ms?.radius) ?? r7;
-        if (!closest || dd < closest.dist) closest = { dist: dd, tau: val(f.tau), wind: val(f.maxWindSpeed), r7: fr, p70: val(f.radiusOf70PercentProbability), willEnter: fr != null && dd <= fr };
+        const fr = r15(f) ?? r7;
+        if (!closest || dd < closest.dist) closest = {
+          dist: dd, tau: val(f.forecasthour ?? f.tau), wind: val(f.maxwindspeed), r7: fr,
+          p70: val(f.radius70percentprobability ?? f.radiusof70percentprobability), willEnter: fr != null && dd <= fr
+        };
       }
       const inside = dist != null && r7 != null && dist <= r7;
       const enterFut = !inside && closest && closest.willEnter;
+      const pred = arr(cur.movingprediction).find(p => p.lang === 'zh-hant');
+      const wind = val(cur.maxwindspeed);
       return {
-        name: t.cwaTyphoonName || t.typhoonName || '熱帶性低氣壓', en: t.typhoonName || '', no: t.cwaTyNo || t.cwaTdNo || '',
-        time: cur.fixTime, lat: c?.lat, lon: c?.lon, wind: val(cur.maxWindSpeed), gust: val(cur.maxGustSpeed), pressure: val(cur.pressure),
-        speed: val(cur.movingSpeed), moveDir: cur.movingDirection, r7, r10, dist, inside, enterFut, closest,
-        cls: tyClass(val(cur.maxWindSpeed))
+        name: t.cwatyphoonname || t.typhoonname || '熱帶性低氣壓', en: t.typhoonname || '', no: t.cwatyno || t.cwatdno || '',
+        time: String(cur.datetime || cur.fixtime || '').replace('T', ' ').slice(0, 16),
+        lat: c?.lat, lon: c?.lon, wind, gust: val(cur.maxgustspeed), pressure: val(cur.pressure),
+        speed: val(cur.movingspeed), moveDir: DIR_EN[cur.movingdirection] || cur.movingdirection, movePred: pred?.value || '',
+        r7, r10, dist, inside, enterFut, closest, cls: tyClass(wind)
       };
     }).filter(t => t.lat != null);
   }

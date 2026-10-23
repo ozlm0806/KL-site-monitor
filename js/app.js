@@ -413,7 +413,7 @@ function showTyphoon() {
       h += `<div class="typhoon"><h3>🌀 ${KL.esc(t.name)} ${KL.esc(t.en)} ${t.no ? '編號 ' + KL.esc(t.no) : ''}</h3>
         強度：${t.cls}　近中心最大風速 ${KL.num(t.wind, 0)} m/s　瞬間最大陣風 ${KL.num(t.gust, 0)} m/s　中心氣壓 ${KL.num(t.pressure, 0)} hPa<br>
         暴風半徑：七級風 ${KL.num(t.r7, 0)} km　十級風 ${KL.num(t.r10, 0)} km<br>
-        距本工地：<b>${KL.num(t.dist, 0)} km</b>　以每小時 ${KL.num(t.speed, 0)} 公里速度，向 ${KL.esc(t.moveDir || '--')} 前進　觀測 ${KL.esc(t.time || '')}<br>
+        距本工地：<b>${KL.num(t.dist, 0)} km</b>　${t.movePred ? KL.esc(t.movePred) : `以每小時 ${KL.num(t.speed, 0)} 公里速度，向 ${KL.esc(t.moveDir || '--')} 前進`}　觀測 ${KL.esc(t.time || '')}<br>
         <b class="${t.inside || t.enterFut ? 'c-r' : 'c-y'}">研判：${judge}</b><br>
         ${c ? `<span class="small muted">預報路徑最近接近：約 ${KL.num(c.dist, 0)} km（+${c.tau} 小時，屆時近中心風速 ${KL.num(c.wind, 0)} m/s${c.p70 ? `，70% 機率半徑 ${KL.num(c.p70, 0)} km` : ''}）</span>` : ''}</div>`;
     }

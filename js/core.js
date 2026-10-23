@@ -2,7 +2,7 @@
 'use strict';
 
 const KL = {
-  VERSION: '1.0.0',
+  VERSION: '1.0.1',
   CONFIG_URL: 'data/config.json',
   LS_DRAFT: 'klws_draft_config',
   LS_PREVIEW: 'klws_preview_draft',
